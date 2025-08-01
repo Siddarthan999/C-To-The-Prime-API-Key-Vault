@@ -26,7 +26,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     const { error } = await supabase
       .from("credentials")
       .upsert(updates, {
-        onConflict: ["user_id", "tool_id", "field_name"], // ✅ Use column names, NOT constraint name
+        onConflict: "user_id,tool_id,field_name" // ✅ Use column names, NOT constraint name
       });
 
     if (error) {

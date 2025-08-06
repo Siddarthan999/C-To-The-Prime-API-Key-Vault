@@ -7,7 +7,9 @@ import {
   LogOut,
   ArrowLeft,
   RotateCcw,
-  User
+  User,
+  Eye, 
+  EyeOff
 } from "lucide-react";
 
 interface ProfilePageProps {
@@ -19,6 +21,7 @@ export default function ProfilePage({ onBack, onLogout }: ProfilePageProps) {
   const [apiKey, setApiKey] = useState("");
   const [loading, setLoading] = useState(true);
   const [copied, setCopied] = useState(false);
+  const [showApiKey, setShowApiKey] = useState(false);
 
   useEffect(() => {
     fetch("/api/users/api-key/get")
@@ -62,20 +65,42 @@ export default function ProfilePage({ onBack, onLogout }: ProfilePageProps) {
         <div>
           <span className="text-gray-400 font-medium">API Key:</span>
           <div className="bg-[#161b22] border border-[#30363d] p-3 mt-2 rounded-md text-sm break-all font-mono flex items-center justify-between">
-            <span>{loading ? "Loading..." : apiKey}</span>
-            {!loading && (
-              <button
-                onClick={handleCopy}
-                title="Copy to clipboard"
-                className="ml-2 p-1 rounded hover:bg-[#21262d]"
-              >
-                {copied ? (
-                  <ClipboardCheck className="h-4 w-4 text-green-500" />
-                ) : (
-                  <Clipboard className="h-4 w-4 text-gray-400" />
-                )}
-              </button>
-            )}
+            <input
+              type={showApiKey ? "text" : "password"} // 👈 Toggle visibility
+              value={loading ? "Loading..." : apiKey}
+              readOnly
+              className="bg-transparent text-sm text-white w-full focus:outline-none font-mono"
+            />
+
+            <div className="flex items-center">
+              {!loading && (
+                <>
+                  <button
+                    onClick={() => setShowApiKey((prev) => !prev)}
+                    title={showApiKey ? "Hide API Key" : "Show API Key"}
+                    className="ml-2 p-1 rounded hover:bg-[#21262d]"
+                  >
+                    {showApiKey ? (
+                      <EyeOff className="h-4 w-4 text-gray-400" />
+                    ) : (
+                      <Eye className="h-4 w-4 text-gray-400" />
+                    )}
+                  </button>
+
+                  <button
+                    onClick={handleCopy}
+                    title="Copy to clipboard"
+                    className="ml-2 p-1 rounded hover:bg-[#21262d]"
+                  >
+                    {copied ? (
+                      <ClipboardCheck className="h-4 w-4 text-green-500" />
+                    ) : (
+                      <Clipboard className="h-4 w-4 text-gray-400" />
+                    )}
+                  </button>
+                </>
+              )}
+            </div>
           </div>
         </div>
       </div>
